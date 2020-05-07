@@ -1,6 +1,9 @@
 import os
 
 # superuser: (id)pp / (pw)123
+# pp token: f45c62b7a121cbbc11a90383365c3c73896715d7
+# test superuser: (id)test / (pw)123123
+# test token: 72d65cf604b145e24053563e6bc1c6d0fa6f9835 (with: python manage.py drf_create_token test)
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -15,7 +18,7 @@ SECRET_KEY = '11#pq&j*25!f1ngkx6%c#7mx(@9k-g=+tn*r_tzpsw$l!g@3+i'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['45.32.250.50']
+ALLOWED_HOSTS = ['45.32.250.50', '127.0.0.1']
 
 
 # Application definition
@@ -29,6 +32,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'rest_framework',
+    'rest_framework.authtoken',
+
+    'core.apps.CoreConfig',
     'quant.apps.QuantConfig',
 ]
 
@@ -116,3 +122,13 @@ USE_TZ = False
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',  # <-- And here
+    ],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 100
+}
+
+AUTH_USER_MODEL = 'core.User'

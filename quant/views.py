@@ -1,11 +1,13 @@
 from django.shortcuts import render
 
-from quant.models import Ticker
-from quant.serializers import TickerSerializer
+from quant.models import Ticker, MonitorStock, MinOHLCV
+from quant.serializers import TickerSerializer, MonitorStockSerializer, MinOHLCVSerializer
 
-from rest_framework import mixins
+from rest_framework import mixins, status
 from rest_framework import generics
 from rest_framework.filters import SearchFilter, OrderingFilter
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 
 def index(request):
     ticker_list = Ticker.objects.all()
@@ -48,3 +50,51 @@ class TickerDetail(mixins.RetrieveModelMixin,
 
     # def delete(self, request, *args, **kwargs):
     #     return self.destroy(request, *args, **kwargs)
+
+class MonitorStockList(generics.ListCreateAPIView):
+    queryset = MonitorStock.objects.all()
+    serializer_class = MonitorStockSerializer
+    filter_backends = [SearchFilter, OrderingFilter]
+    permission_classes = (IsAuthenticated,)
+
+    # def create(self, request, *args, **kwargs):
+    #     serializer = self.get_serializer(data=request.data)
+    #     serializer.is_valid(raise_exception=True)
+    #     self.perform_create(serializer)
+    #     headers = self.get_success_headers(serializer.data)
+    #     return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        
+    def get_queryset(self, *args, **kwargs):
+        queryset = MonitorStock.objects.all()
+        user_by = self.request.GET.get('user')
+        date_by = self.request.GET.get('date')
+        if user_by:
+            queryset = queryset.filter(user=user_by)
+        if date_by:
+            queryset = queryset.filter(date=date_by)
+        return queryset
+
+class MinOHLCVList(generics.ListCreateAPIView):
+    queryset = MinOHLCV.objects.all()
+    serializer_class = MinOHLCVSerializer
+    filter_backends = [SearchFilter, OrderingFilter]
+
+    def create(self, request, *args, **kwargs):
+        if request.user.is_staff == True:
+            serializer = self.get_serializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            self.perform_create(serializer)
+            headers = self.get_success_headers(serializer.data)
+            return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        else:
+            return Response({'FAILED': 'Cannot POST. Not authorized'}, status=403)
+
+    def get_queryset(self, *args, **kwargs):
+        queryset = MinOHLCV.objects.all()
+        code_by = self.request.GET.get('code')
+        date_by = self.request.GET.get('date')
+        if code_by:
+            queryset = queryset.filter(code=code_by)
+        if date_by:
+            queryset = queryset.filter(date=date_by)
+        return queryset
