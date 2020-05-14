@@ -1,27 +1,22 @@
 import os
 
-# superuser: (id)pp / (pw)123
-# pp token: f45c62b7a121cbbc11a90383365c3c73896715d7
-# test superuser: (id)test / (pw)123123
-# test token: 72d65cf604b145e24053563e6bc1c6d0fa6f9835 (with: python manage.py drf_create_token test)
+from sensitives import SENSITIVES
 
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+SECRET = SENSITIVES['django']['secret']
+HOST = SENSITIVES['server']['host']
+DBNAME = SENSITIVES['db']['name']
+DBUSER = SENSITIVES['db']['user']
+DBPW = SENSITIVES['db']['pw']
+DBHOST = SENSITIVES['db']['host']
+DBPORT = SENSITIVES['db']['port']
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+SECRET_KEY = SECRET
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '11#pq&j*25!f1ngkx6%c#7mx(@9k-g=+tn*r_tzpsw$l!g@3+i'
-
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['45.32.250.50', '127.0.0.1']
-
-
-# Application definition
+ALLOWED_HOSTS = [HOST, '127.0.0.1']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -68,24 +63,16 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'shitweb.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/3.0/ref/settings/#databases
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'ppdb',
-        'USER': 'pp',
-        'PASSWORD': 'makeitpopweARbiter;;',
-        'HOST': '45.77.29.5',
-        'PORT': 5432,
+        'NAME': DBNAME,
+        'USER': DBUSER,
+        'PASSWORD': DBPW,
+        'HOST': DBHOST,
+        'PORT': DBPORT,
     }
 }
-
-
-# Password validation
-# https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -101,10 +88,6 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
-
-# Internationalization
-# https://docs.djangoproject.com/en/3.0/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
 
@@ -125,7 +108,8 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.TokenAuthentication',  # <-- And here
+        'rest_framework.authentication.TokenAuthentication',
+        # 'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'PAGE_SIZE': 100

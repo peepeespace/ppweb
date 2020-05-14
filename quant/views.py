@@ -1,7 +1,13 @@
 from django.shortcuts import render
 
-from quant.models import Ticker, MonitorStock, MinOHLCV
-from quant.serializers import TickerSerializer, MonitorStockSerializer, MinOHLCVSerializer
+from quant.models import Ticker, MonitorStock, MinOHLCV, UserState, PortHistory
+from quant.serializers import (
+    TickerSerializer,
+    MonitorStockSerializer,
+    MinOHLCVSerializer,
+    UserStateSerializer,
+    PortHistorySerializer,
+)
 
 from rest_framework import mixins, status
 from rest_framework import generics
@@ -95,6 +101,38 @@ class MinOHLCVList(generics.ListCreateAPIView):
         date_by = self.request.GET.get('date')
         if code_by:
             queryset = queryset.filter(code=code_by)
+        if date_by:
+            queryset = queryset.filter(date=date_by)
+        return queryset
+
+class UserStateList(generics.ListCreateAPIView):
+    queryset = UserState.objects.all()
+    serializer_class = UserStateSerializer
+    filter_backends = [SearchFilter, OrderingFilter]
+    permission_classes = (IsAuthenticated,)
+        
+    def get_queryset(self, *args, **kwargs):
+        queryset = UserState.objects.all()
+        user_by = self.request.GET.get('user')
+        date_by = self.request.GET.get('date')
+        if user_by:
+            queryset = queryset.filter(user=user_by)
+        if date_by:
+            queryset = queryset.filter(date=date_by)
+        return queryset
+
+class PortHistoryList(generics.ListCreateAPIView):
+    queryset = PortHistory.objects.all()
+    serializer_class = PortHistorySerializer
+    filter_backends = [SearchFilter, OrderingFilter]
+    permission_classes = (IsAuthenticated,)
+        
+    def get_queryset(self, *args, **kwargs):
+        queryset = PortHistory.objects.all()
+        user_by = self.request.GET.get('user')
+        date_by = self.request.GET.get('date')
+        if user_by:
+            queryset = queryset.filter(user=user_by)
         if date_by:
             queryset = queryset.filter(date=date_by)
         return queryset

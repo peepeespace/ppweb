@@ -37,3 +37,32 @@ class MinOHLCV(models.Model):
 
     def __str__(self):
         return '{} {}'.format(self.code, self.date)
+
+class UserState(models.Model):
+    user = models.ForeignKey(User,
+                             default=1,
+                             on_delete=models.CASCADE,
+                             related_name='state')
+    date = models.CharField(max_length=20)
+    want_state = models.CharField(max_length=10) # 1: on, 0: off
+    tool_state = models.CharField(max_length=10) # 1: on, 0: off, 2: turning on, 3: turning off
+    port_state = models.CharField(max_length=10) # 1: stock bought, 0: no stocks bought
+
+    def __str__(self):
+        return self.user.username
+
+class PortHistory(models.Model):
+    user = models.ForeignKey(User,
+                             default=1,
+                             on_delete=models.CASCADE,
+                             related_name='history')
+    date = models.CharField(max_length=20)
+    traded_stock = models.CharField(max_length=20)
+    traded_time = models.CharField(max_length=20)
+    action = models.CharField(max_length=10) # 1: buy, 0: sell
+    amount = models.IntegerField()
+    price = models.IntegerField()
+
+    def __str__(self):
+        return self.user.username
+    
