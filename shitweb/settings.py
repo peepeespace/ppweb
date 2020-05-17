@@ -16,7 +16,7 @@ SECRET_KEY = SECRET
 
 DEBUG = True
 
-ALLOWED_HOSTS = [HOST, '127.0.0.1']
+ALLOWED_HOSTS = [HOST, '127.0.0.1', 'api.peepeespace.com']
 
 INSTALLED_APPS = [
     'django.contrib.admin',

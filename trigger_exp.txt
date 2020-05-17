@@ -1,0 +1,6 @@
+***** How to run trigger from command line *****
+Reference: https://stackoverflow.com/questions/9736085/run-a-postgresql-sql-file-using-command-line-arguments
+
+- this is from within the main server
+
+psql -U username -d myDataBase -a -f myInsertFile
