@@ -17,6 +17,7 @@ SECRET_KEY = SECRET
 DEBUG = True
 
 ALLOWED_HOSTS = [HOST, '127.0.0.1', 'api.peepeespace.com']
+CORS_ORIGIN_ALLOW_ALL = True # 개발 단계에서는 1, 프로덕션에서는 CORS_ORIGIN_WHITELIST로 아이피 관리
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -26,6 +27,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'corsheaders',
     'rest_framework',
     'rest_framework.authtoken',
 
@@ -34,6 +36,8 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
+
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
