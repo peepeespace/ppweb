@@ -28,7 +28,7 @@ class LoginView(APIView):
         user = authenticate(username=id, password=pw)
         if user is not None:
             try:
-                return Response({'Token': user.auth_token.key})
+                return Response({'Token': user.auth_token.key, 'id': user.id})
             except:
                 return Response({'success': 'login success, but no token available'})
         else:
