@@ -1,6 +1,7 @@
 from django.shortcuts import render
 
 from quant.models import Ticker, MonitorStock, MinOHLCV, UserState, PortHistory
+from quant.permissions import IsOwnerOrReadOnly
 from quant.serializers import (
     TickerSerializer,
     MonitorStockSerializer,
@@ -10,7 +11,7 @@ from quant.serializers import (
 )
 
 from rest_framework import mixins, status
-from rest_framework import generics
+from rest_framework import generics, permissions
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
@@ -80,6 +81,12 @@ class MonitorStockList(generics.ListCreateAPIView):
             queryset = queryset.filter(date=date_by)
         return queryset
 
+class MonitorStockDetails(generics.RetrieveUpdateDestroyAPIView):
+    queryset = MonitorStock.objects.all()
+    serializer_class = MonitorStockSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly,
+                          IsOwnerOrReadOnly]
+
 class MinOHLCVList(generics.ListCreateAPIView):
     queryset = MinOHLCV.objects.all()
     serializer_class = MinOHLCVSerializer
@@ -121,6 +128,12 @@ class UserStateList(generics.ListCreateAPIView):
             queryset = queryset.filter(date=date_by)
         return queryset
 
+class UserStateDetails(generics.RetrieveUpdateDestroyAPIView):
+    queryset = UserState.objects.all()
+    serializer_class = UserStateSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly,
+                          IsOwnerOrReadOnly]
+
 class PortHistoryList(generics.ListCreateAPIView):
     queryset = PortHistory.objects.all()
     serializer_class = PortHistorySerializer
@@ -136,3 +149,9 @@ class PortHistoryList(generics.ListCreateAPIView):
         if date_by:
             queryset = queryset.filter(date=date_by)
         return queryset
+
+class PortHistoryDetails(generics.RetrieveUpdateDestroyAPIView):
+    queryset = PortHistory.objects.all()
+    serializer_class = PortHistorySerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly,
+                          IsOwnerOrReadOnly]

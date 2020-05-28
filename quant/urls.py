@@ -6,9 +6,12 @@ from quant.views import (
     TickerList,
     TickerDetail,
     MonitorStockList,
+    MonitorStockDetails,
     MinOHLCVList,
     UserStateList,
+    UserStateDetails,
     PortHistoryList,
+    PortHistoryDetails,
 )
 
 
@@ -20,9 +23,12 @@ urlpatterns = [
     path('ticker/', TickerList.as_view()),
     path('ticker/<int:pk>/', TickerDetail.as_view()),
     path('monitorstock/', MonitorStockList.as_view()),
+    path('monitorstock/<int:pk>/', MonitorStockDetails.as_view()),
     path('minohlcv/', MinOHLCVList.as_view()),
     path('userstate/', UserStateList.as_view()),
+    path('userstate/<int:pk>/', UserStateDetails.as_view()),
     path('porthistory/', PortHistoryList.as_view()),
+    path('porthistory/<int:pk>/', PortHistoryDetails.as_view()),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
